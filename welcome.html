@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to EchoPro — Choose Your Path</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ===== Theme tokens — adjust these to match echopro-marketing-home.html exactly ===== */
+  :root{
+    /* matched to echopro-marketing-home.html */
+    --bg:#07090F;
+    --bg-2:#0C0F1A;
+    --card:rgba(255,255,255,.03);
+    --card-border:rgba(0,212,255,0.12);
+    --text:#F0F4FF;
+    --muted:#6B7A99;
+    --violet:#00D4FF; /* focus accent */
+    --cyan:#00D4FF;
+    --magenta:#FF0080;
+    --gold:#FFB800;
+    --green:#00D4FF;
+    --radius:16px;
+    --grad-pro:linear-gradient(135deg,#FFB800 0%,#FF0080 100%);
+    --grad-free:linear-gradient(135deg,#00D4FF 0%,#006EFF 100%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{min-height:100%}
+  body{
+    font-family:'Space Grotesk','Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  body::before{ /* ambient glow */
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(700px 400px at 50% 8%,rgba(0,212,255,.12),rgba(255,0,128,.06) 50%,transparent 70%),
+      radial-gradient(800px 600px at 50% 110%,rgba(255,184,0,.06),transparent 60%);
+  }
+  body::after{ /* subtle grid */
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:1;
+    background-image:linear-gradient(rgba(0,212,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.04) 1px,transparent 1px);
+    background-size:60px 60px;
+    mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%);
+  }
+  a{color:inherit;text-decoration:none}
+
+  /* ===== Nav ===== */
+  .nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:80px;background:rgba(7,9,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--card-border)}
+  .nav-logo{display:flex;align-items:center;gap:10px;font-family:'Orbitron',sans-serif;font-size:18px;font-weight:700;letter-spacing:.08em}
+  .nav-logo-badge{color:var(--cyan)}
+  .nav-avatar{width:51px;height:51px;border-radius:50%;background:linear-gradient(135deg,#1a1f35 0%,#0d1120 100%);border:2px solid rgba(0,212,255,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 0 3px rgba(0,212,255,0.08),0 4px 14px rgba(0,0,0,0.5)}
+  .nav-avatar svg{width:33px;height:33px}
+  .nav-link{color:var(--cyan);font-weight:600;padding:8px 20px;border-radius:8px;font-size:13px;letter-spacing:.05em;box-shadow:0 0 16px rgba(0,212,255,0.35);transition:transform .15s,box-shadow .15s}
+  .nav-link:hover{transform:translateY(-1px);box-shadow:0 0 28px rgba(0,212,255,0.55)}
+  .logo{font-family:'Orbitron',sans-serif;font-weight:700;letter-spacing:.1em}
+  .logo span{color:var(--cyan)}
+  @media (max-width:768px){.nav{padding:12px 16px;height:auto;min-height:68px}.nav-avatar{width:40px;height:40px}.nav-avatar svg{width:26px;height:26px}.nav-logo{font-size:16px}}
+
+  /* ===== Hero ===== */
+  .hero{text-align:center;max-width:760px;margin:0 auto;padding:40px 20px 10px}
+  .pill{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--cyan);background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);padding:7px 14px;border-radius:999px}
+  .pill .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 2s infinite}
+  @keyframes pulse{50%{opacity:.35}}
+  .hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3.6rem);line-height:1.1;margin:22px 0 14px;letter-spacing:-.02em}
+  .hero h1 .grad{color:var(--cyan)}
+  .hero h1 .grad b{color:var(--magenta);font-weight:inherit}
+  .hero p{color:var(--muted);font-size:1.08rem;line-height:1.6}
+
+  /* ===== Choice cards ===== */
+  .choices{display:grid;grid-template-columns:1fr 1fr;gap:26px;max-width:1180px;margin:44px auto 60px;padding:0 20px}
+  .choice{
+    position:relative;display:flex;flex-direction:column;text-align:left;cursor:pointer;
+    padding:38px 34px 32px;border-radius:var(--radius);min-height:520px;
+    background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+    border:1px solid var(--card-border);color:var(--text);font:inherit;
+    transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .3s;
+    overflow:hidden;isolation:isolate;
+  }
+  .choice::before{ /* gradient border */
+    content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;z-index:-1;
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;opacity:.55;transition:opacity .3s;
+  }
+  .choice::after{ /* corner glow */
+    content:"";position:absolute;width:420px;height:420px;border-radius:50%;top:-180px;right:-160px;z-index:-2;filter:blur(40px);opacity:.35;transition:opacity .3s;
+  }
+  .choice.pro::before{background:var(--grad-pro)}
+  .choice.pro::after{background:radial-gradient(circle,rgba(255,184,0,.45),rgba(255,0,128,.25) 60%,transparent 70%)}
+  .choice.free::before{background:var(--grad-free)}
+  .choice.free::after{background:radial-gradient(circle,rgba(0,212,255,.5),rgba(0,110,255,.2) 60%,transparent 70%)}
+  .choice:hover,.choice:focus-visible{transform:translateY(-6px);outline:none}
+  .choice:hover::before,.choice:focus-visible::before{opacity:1}
+  .choice:hover::after{opacity:.6}
+  .choice.pro:hover{box-shadow:0 0 36px rgba(255,184,0,.3)}
+  .choice.free:hover{box-shadow:0 0 36px rgba(0,212,255,.35)}
+
+  .tag{position:absolute;top:22px;right:22px;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 11px;border-radius:999px}
+  .pro .tag{background:rgba(255,184,0,.1);color:var(--gold);border:1px solid rgba(255,184,0,.35)}
+  .free .tag{background:rgba(0,212,255,.08);color:var(--cyan);border:1px solid rgba(0,212,255,.35)}
+
+  .icon{width:70px;height:70px;display:grid;place-items:center;font-size:2.1rem;border-radius:18px;margin-bottom:22px;
+    background:rgba(255,255,255,.06);border:1px solid var(--card-border)}
+  .eyebrow{font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .choice h2{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(1.6rem,3vw,2.3rem);letter-spacing:-.015em;line-height:1.05;margin-bottom:12px}
+  .choice .desc{color:var(--muted);line-height:1.6;margin-bottom:22px}
+
+  .price{display:flex;align-items:baseline;gap:8px;margin-bottom:20px}
+  .price b{font-family:'Orbitron',sans-serif;font-size:2.6rem}
+  .price span{color:var(--muted);font-size:.95rem}
+
+  .features{list-style:none;display:grid;gap:11px;margin-bottom:26px}
+  .features li{display:flex;gap:10px;align-items:flex-start;font-size:.95rem;line-height:1.45}
+  .features li i{font-style:normal;flex:none;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-size:.75rem}
+  .pro .features li i{background:rgba(255,184,0,.12);color:var(--gold)}
+  .free .features li i{background:rgba(0,212,255,.1);color:var(--cyan)}
+
+  .stats{display:flex;gap:12px;margin-bottom:26px;flex-wrap:wrap}
+  .stat{flex:1;min-width:110px;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--card-border)}
+  .stat b{display:block;font-family:'Orbitron',sans-serif;color:var(--cyan);font-size:1.4rem}
+  .stat span{font-size:.78rem;color:var(--muted)}
+
+  .cta{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px;border-radius:16px;font-weight:700;font-size:1.05rem}
+  .pro .cta{background:var(--grad-pro);color:#07090F;box-shadow:0 0 24px rgba(255,0,128,.3)}
+  .free .cta{background:var(--grad-free);color:#07090F;box-shadow:0 0 24px rgba(0,212,255,.3)}
+  .cta .arrow{transition:transform .3s}
+  .choice:hover .cta .arrow{transform:translateX(6px)}
+  .fine{margin-top:12px;font-size:.78rem;color:var(--muted);text-align:center}
+
+  .stores{display:flex;gap:10px;margin-bottom:26px;flex-wrap:wrap}
+  .store{display:inline-flex;align-items:center;gap:9px;padding:10px 14px;border-radius:12px;background:#000;border:1px solid rgba(255,255,255,.18);font-size:.8rem;line-height:1.15}
+  .store small{display:block;font-size:.64rem;color:var(--muted)}
+  .store svg{width:20px;height:20px;fill:#fff;flex:none}
+
+  footer{border-top:1px solid var(--card-border);padding:36px 40px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;background:rgba(0,0,0,0.3);color:var(--muted);font-size:13px}
+  footer .logo{font-size:14px;color:var(--muted)}
+  footer nav{display:flex;gap:24px;flex-wrap:wrap}
+  footer .copy{font-size:12px;opacity:.5}
+  @media (max-width:768px){footer{flex-direction:column;text-align:center;padding:30px 16px}footer nav{justify-content:center;gap:16px}}
+  footer nav a:hover{color:var(--text)}
+
+  /* ===== Modals ===== */
+  .overlay{position:fixed;inset:0;background:rgba(3,3,8,.72);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:16px;z-index:100}
+  .overlay.open,.overlay:target{display:flex;animation:fade .25s}
+  @keyframes fade{from{opacity:0}}
+  .modal{position:relative;width:100%;max-width:480px;max-height:calc(100vh - 32px);overflow-y:auto;background:var(--bg-2);border:1px solid var(--card-border);border-radius:var(--radius);padding:30px 28px;
+    box-shadow:0 0 60px rgba(0,212,255,.15);animation:rise .3s cubic-bezier(.2,.8,.2,1)}
+  @keyframes rise{from{transform:translateY(20px);opacity:0}}
+  .close{position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:10px;border:1px solid var(--card-border);background:var(--card);color:var(--text);cursor:pointer;font-size:1rem}
+  .modal h3{font-family:'Orbitron',sans-serif;font-size:1.5rem;margin-bottom:4px}
+  .modal .sub{color:var(--muted);font-size:.9rem;margin-bottom:20px}
+  .steps{display:flex;gap:6px;margin-bottom:22px}
+  .steps span{flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,.1)}
+  .steps span.on{background:var(--grad-pro)}
+  .step{display:none}.step.active{display:block}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  label{display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin:0 0 6px}
+  .field{margin-bottom:14px}
+  input[type=text],input[type=email],input[type=tel]{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--card-border);background:rgba(255,255,255,.04);color:var(--text);font:inherit;font-size:.95rem;transition:border-color .2s}
+  input:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(0,212,255,.2)}
+  input.bad{border-color:#f87171}
+  .cards-accepted{display:flex;gap:6px;margin-bottom:14px;font-size:.7rem;font-weight:700;color:var(--muted);align-items:center}
+  .cards-accepted em{font-style:normal;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.06);border:1px solid var(--card-border)}
+  .summary{border:1px solid var(--card-border);border-radius:14px;padding:14px 16px;margin:6px 0 16px;background:rgba(255,255,255,.03);font-size:.92rem}
+  .summary div{display:flex;justify-content:space-between;padding:4px 0}
+  .summary .total{border-top:1px dashed var(--card-border);margin-top:6px;padding-top:10px;font-weight:700}
+  .agree{display:flex;align-items:flex-start;gap:10px;font-weight:400;font-size:.78rem;color:var(--muted);line-height:1.5;margin-bottom:18px;cursor:pointer}
+  .agree input{margin-top:3px;accent-color:var(--violet);flex:none}
+  .agree a{color:var(--cyan);text-decoration:underline}
+  .btns{display:flex;gap:10px}
+  .btn{flex:1;padding:14px 18px;border-radius:12px;border:0;font:inherit;font-weight:700;cursor:pointer;transition:filter .2s,opacity .2s}
+  .btn.primary{background:var(--grad-pro);color:#07090F}
+  .btn.primary:hover{filter:brightness(1.08)}
+  .btn.primary:disabled{opacity:.5;cursor:not-allowed}
+  .btn.ghost{flex:0 0 auto;background:var(--card);color:var(--text);border:1px solid var(--card-border)}
+  .secure{text-align:center;font-size:.75rem;color:var(--muted);margin-top:14px}
+  .error{color:#f87171;font-size:.8rem;margin:-4px 0 12px;min-height:1em}
+  .success{text-align:center;padding:10px 0}
+  .success .big{font-size:3rem;margin-bottom:10px}
+
+  .store-modal .stores{flex-direction:column}
+  .store-modal .store{padding:14px 18px;font-size:1rem;justify-content:flex-start}
+  .store-modal .store svg{width:26px;height:26px}
+  .store-modal .store:hover{border-color:var(--cyan)}
+
+  @media (max-width:860px){
+    .choices{grid-template-columns:1fr;gap:18px;margin-top:30px}
+    .choice{min-height:auto;padding:30px 22px 24px}
+  }
+  @media (max-width:420px){.row{grid-template-columns:1fr}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-avatar">
+      <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="15" cy="11" r="6" fill="rgba(0,212,255,0.55)"/>
+        <path d="M3 27c0-6.627 5.373-10 12-10s12 3.373 12 10" stroke="rgba(0,212,255,0.45)" stroke-width="2.5" stroke-linecap="round" fill="rgba(0,212,255,0.18)"/>
+      </svg>
+    </div>
+    <span><span class="nav-logo-badge">Echo</span>Pro</span>
+  </a>
+  <a href="echopro-marketing-home.html" class="nav-link">Pro Suite</a>
+</header>
+
+<section class="hero">
+  <div class="pill"><span class="dot"></span>Account created</div>
+  <h1>Welcome aboard.<br><span class="grad">Choose your <b>path.</b></span></h1>
+  <p>Unlock the full EchoPro Marketing Suite, or jump straight into the free ZPLN games on your phone. You can upgrade any time.</p>
+</section>
+
+<main class="choices">
+  <!-- LEFT: Upgrade to Pro -->
+  <a class="choice pro" id="proBtn" href="#checkout" aria-haspopup="dialog">
+    <span class="tag">⭐ Recommended</span>
+    <div class="icon">🚀</div>
+    <div class="eyebrow">Echo Pro Membership</div>
+    <h2>Upgrade to Pro</h2>
+    <p class="desc">Pro marketing &amp; advertising tools typically reserved for major corporate sponsors — now yours.</p>
+    <div class="price"><b>$45</b><span>per month · cancel anytime</span></div>
+    <ul class="features">
+      <li><i>✦</i>Full MediaScore access — viral playlists with your branding</li>
+      <li><i>✦</i>ZPLN &amp; Zenduja Event Creators — zero-cost prize pools</li>
+      <li><i>⛏️</i>2× Mining Boost — whatever you win is doubled</li>
+      <li><i>🏆</i>Exclusive Pro Members events with the largest prize purses</li>
+      <li><i>👥</i>Pro Teams — build teams &amp; earn commissions</li>
+    </ul>
+    <span class="cta">Upgrade to Pro <span class="arrow">→</span></span>
+    <span class="fine">🔒 256-bit SSL · Secure checkout</span>
+  </a>
+
+  <!-- RIGHT: Free Area -->
+  <button class="choice free" id="freeBtn" type="button">
+    <span class="tag">Free</span>
+    <div class="icon">📱</div>
+    <div class="eyebrow">ZPLN Mobile App</div>
+    <h2>Free Area</h2>
+    <p class="desc">Download the ZPLN app and start playing brain games, competing in events and earning ZPLN Rewards — free.</p>
+    <div class="stats">
+      <div class="stat"><b>10,342</b><span>Players</span></div>
+      <div class="stat"><b>11</b><span>Live events</span></div>
+      <div class="stat"><b>$0</b><span>To start</span></div>
+    </div>
+    <div class="stores">
+      <span class="store"><svg viewBox="0 0 24 24"><path d="M16.37 12.6c-.02-2.3 1.88-3.4 1.97-3.46-1.07-1.57-2.74-1.78-3.33-1.8-1.42-.14-2.77.83-3.49.83-.72 0-1.83-.81-3.01-.79-1.55.02-2.98.9-3.78 2.29-1.61 2.8-.41 6.93 1.16 9.2.77 1.11 1.68 2.35 2.88 2.31 1.16-.05 1.59-.75 2.99-.75 1.39 0 1.79.75 3.01.72 1.24-.02 2.03-1.13 2.79-2.24.88-1.29 1.24-2.53 1.26-2.6-.03-.01-2.42-.93-2.45-3.71zM14.07 5.85c.64-.77 1.07-1.85.95-2.92-.92.04-2.03.61-2.69 1.38-.59.68-1.11 1.77-.97 2.82 1.02.08 2.07-.52 2.71-1.28z"/></svg><span><small>Download on the</small>App Store</span></span>
+      <span class="store"><svg viewBox="0 0 24 24"><path d="M3.6 1.8 13.8 12 3.6 22.2c-.35-.2-.6-.6-.6-1.1V2.9c0-.5.25-.9.6-1.1zm11.3 11.3 2.4 2.4-11 6.3 8.6-8.7zm0-2.2L6.3 2.2l11 6.3-2.4 2.4zm3.5-1.6 2.9 1.7c.8.5.8 1.6 0 2.1l-2.9 1.7-2.6-2.7 2.6-2.8z"/></svg><span><small>Get it on</small>Google Play</span></span>
+    </div>
+    <span class="cta">Go to Free Area <span class="arrow">→</span></span>
+    <span class="fine">Available on iOS &amp; Android</span>
+  </button>
+</main>
+
+<footer>
+  <span class="logo">ECHO<span>PRO</span> ™</span>
+  <nav>
+    <a href="echopro-marketing-home.html">Pro Suite</a>
+    <a href="#">Pro Teams</a>
+    <a href="#">Terms &amp; Conditions</a>
+    <a href="#">Privacy</a>
+    <a href="#">Refund Policy</a>
+    <a href="mailto:support@echobuilder.com">Support</a>
+  </nav>
+  <span class="copy">© 2026 EchoBuilder.com · All rights reserved</span>
+</footer>
+
+<!-- ===== Checkout modal ===== -->
+<div class="overlay" id="checkout" role="dialog" aria-modal="true" aria-labelledby="coTitle">
+  <div class="modal">
+    <a class="close" href="#" data-close aria-label="Close" style="display:grid;place-items:center">✕</a>
+    <h3 id="coTitle">Echo Pro — $45/month</h3>
+    <p class="sub">Unlock the full EchoPro Marketing Suite.</p>
+    <div class="steps"><span class="on"></span><span></span><span></span></div>
+
+    <form id="coForm" novalidate>
+      <!-- Step 1: details -->
+      <div class="step active" data-step="1">
+        <div class="row">
+          <div class="field"><label for="fn">First Name</label><input id="fn" name="firstName" type="text" autocomplete="given-name" required></div>
+          <div class="field"><label for="ln">Last Name</label><input id="ln" name="lastName" type="text" autocomplete="family-name" required></div>
+        </div>
+        <div class="field"><label for="em">Email Address</label><input id="em" name="email" type="email" autocomplete="email" required></div>
+        <div class="error" data-err="1"></div>
+        <div class="btns"><button type="button" class="btn primary" data-next>Next Step →</button></div>
+      </div>
+
+      <!-- Step 2: payment -->
+      <div class="step" data-step="2">
+        <div class="cards-accepted">ACCEPTED CARDS <em>VISA</em><em>MC</em><em>AMEX</em><em>DISC</em></div>
+        <!-- IMPORTANT: wire these fields to your payment processor's hosted/tokenized inputs
+             (e.g. Stripe Elements, Braintree Hosted Fields). Never send raw card data to your own server. -->
+        <div class="field"><label for="cc">Card Number</label><input id="cc" type="text" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" maxlength="23"></div>
+        <div class="field"><label for="ch">Cardholder Name</label><input id="ch" type="text" autocomplete="cc-name"></div>
+        <div class="row">
+          <div class="field"><label for="ex">Expiry</label><input id="ex" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM / YY" maxlength="7"></div>
+          <div class="field"><label for="cv">CVV</label><input id="cv" type="text" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4"></div>
+        </div>
+        <div class="summary">
+          <div><span>Echo Pro Membership</span><span>$45.00</span></div>
+          <div class="total"><span>Total Due Today</span><span>$45.00</span></div>
+        </div>
+        <label class="agree"><input type="checkbox" id="agree">
+          <span>I agree to the EchoBuilder <a href="#">Terms &amp; Conditions</a>, <a href="#">Privacy Policy</a>, and <a href="#">Refund Policy</a>. I understand I am subscribing to EchoPro today and will be billed $45/month going forward unless I cancel. I can cancel any time by contacting EchoBuilder support.</span>
+        </label>
+        <div class="error" data-err="2"></div>
+        <div class="btns">
+          <button type="button" class="btn ghost" data-back>← Back</button>
+          <button type="submit" class="btn primary" id="payBtn">🔒 Confirm and Pay</button>
+        </div>
+        <p class="secure">256-bit SSL encrypted · Secure checkout</p>
+      </div>
+
+      <!-- Step 3: success -->
+      <div class="step" data-step="3">
+        <div class="success">
+          <div class="big">✓</div>
+          <h3>Echo Pro Activated</h3>
+          <p class="sub">Welcome to your Pro Suite. Your membership is active.</p>
+          <a class="btn primary" style="display:block;text-align:center" href="echopro-marketing-home.html">Enter Pro Suite →</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== Store picker (desktop fallback) ===== -->
+<div class="overlay" id="storePicker" role="dialog" aria-modal="true" aria-labelledby="spTitle">
+  <div class="modal store-modal">
+    <button class="close" data-close aria-label="Close">✕</button>
+    <h3 id="spTitle">Get the ZPLN app</h3>
+    <p class="sub">Choose your store to download ZPLN free.</p>
+    <div class="stores">
+      <a class="store" id="iosLink" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M16.37 12.6c-.02-2.3 1.88-3.4 1.97-3.46-1.07-1.57-2.74-1.78-3.33-1.8-1.42-.14-2.77.83-3.49.83-.72 0-1.83-.81-3.01-.79-1.55.02-2.98.9-3.78 2.29-1.61 2.8-.41 6.93 1.16 9.2.77 1.11 1.68 2.35 2.88 2.31 1.16-.05 1.59-.75 2.99-.75 1.39 0 1.79.75 3.01.72 1.24-.02 2.03-1.13 2.79-2.24.88-1.29 1.24-2.53 1.26-2.6-.03-.01-2.42-.93-2.45-3.71zM14.07 5.85c.64-.77 1.07-1.85.95-2.92-.92.04-2.03.61-2.69 1.38-.59.68-1.11 1.77-.97 2.82 1.02.08 2.07-.52 2.71-1.28z"/></svg><span><small>Download on the</small>App Store (iPhone &amp; iPad)</span></a>
+      <a class="store" id="androidLink" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M3.6 1.8 13.8 12 3.6 22.2c-.35-.2-.6-.6-.6-1.1V2.9c0-.5.25-.9.6-1.1zm11.3 11.3 2.4 2.4-11 6.3 8.6-8.7zm0-2.2L6.3 2.2l11 6.3-2.4 2.4zm3.5-1.6 2.9 1.7c.8.5.8 1.6 0 2.1l-2.9 1.7-2.6-2.7 2.6-2.8z"/></svg><span><small>Get it on</small>Google Play (Android)</span></a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= CONFIG — replace placeholders ================= */
+const CONFIG = {
+  // TODO: paste the real ZPLN store listing URLs
+  iosStoreUrl:     'https://apps.apple.com/app/idXXXXXXXXXX',
+  androidStoreUrl: 'https://play.google.com/store/apps/details?id=com.zpln.app',
+
+  // Option A: if you'd rather send users to your existing checkout page, set its URL here
+  // and the Pro button will redirect instead of opening the built-in form.
+  externalCheckoutUrl: '',
+
+  // Option B: built-in form. Replace with your processor call (tokenize card, create $45/mo subscription).
+  // Must resolve on success or throw an Error with a user-facing message.
+  async processPayment(details) {
+    await new Promise(r => setTimeout(r, 1200)); // demo only
+    return { ok: true };
+  }
+};
+/* ================================================================= */
+
+const $ = s => document.querySelector(s);
+const open = el => { el.classList.add('open'); document.body.style.overflow='hidden'; };
+const close = el => { el.classList.remove('open'); document.body.style.overflow=''; if (location.hash === '#'+el.id) history.replaceState(null,'',location.pathname+location.search); };
+
+document.querySelectorAll('.overlay').forEach(ov => {
+  ov.addEventListener('click', e => { if (e.target === ov || e.target.closest('[data-close]')) close(ov); });
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.overlay.open').forEach(close); });
+
+/* ---- Free Area: send to the right store ---- */
+$('#iosLink').href = CONFIG.iosStoreUrl;
+$('#androidLink').href = CONFIG.androidStoreUrl;
+$('#freeBtn').addEventListener('click', () => {
+  const ua = navigator.userAgent || '';
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (isIOS) return window.location.href = CONFIG.iosStoreUrl;
+  if (/Android/i.test(ua)) return window.location.href = CONFIG.androidStoreUrl;
+  open($('#storePicker'));
+});
+
+/* ---- Pro: checkout ---- */
+const co = $('#checkout'), form = $('#coForm'), bars = co.querySelectorAll('.steps span');
+function goStep(n){
+  form.querySelectorAll('.step').forEach(s => s.classList.toggle('active', +s.dataset.step === n));
+  bars.forEach((b,i) => b.classList.toggle('on', i < n));
+  const first = form.querySelector(`.step[data-step="${n}"] input`); if (first) first.focus();
+}
+$('#proBtn').addEventListener('click', e => {
+  e.preventDefault();
+  if (CONFIG.externalCheckoutUrl) return window.location.href = CONFIG.externalCheckoutUrl;
+  goStep(1); open(co);
+});
+
+const setErr = (n,msg) => form.querySelector(`[data-err="${n}"]`).textContent = msg || '';
+const mark = (el,bad) => { el.classList.toggle('bad', bad); return !bad; };
+
+form.querySelector('[data-next]').addEventListener('click', () => {
+  const ok = [
+    mark($('#fn'), !$('#fn').value.trim()),
+    mark($('#ln'), !$('#ln').value.trim()),
+    mark($('#em'), !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($('#em').value.trim()))
+  ].every(Boolean);
+  setErr(1, ok ? '' : 'Please fill in your name and a valid email.');
+  if (ok) { if (!$('#ch').value) $('#ch').value = `${$('#fn').value.trim()} ${$('#ln').value.trim()}`; goStep(2); }
+});
+form.querySelector('[data-back]').addEventListener('click', () => goStep(1));
+
+// input formatting
+$('#cc').addEventListener('input', e => e.target.value = e.target.value.replace(/\D/g,'').slice(0,19).replace(/(.{4})/g,'$1 ').trim());
+$('#ex').addEventListener('input', e => { let v=e.target.value.replace(/\D/g,'').slice(0,4); e.target.value = v.length>2 ? v.slice(0,2)+' / '+v.slice(2) : v; });
+$('#cv').addEventListener('input', e => e.target.value = e.target.value.replace(/\D/g,'').slice(0,4));
+
+const luhn = n => { let s=0,d=false; for(let i=n.length-1;i>=0;i--){let x=+n[i]; if(d){x*=2; if(x>9)x-=9;} s+=x; d=!d;} return s%10===0; };
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  const num = $('#cc').value.replace(/\s/g,''), [mm,yy] = $('#ex').value.split('/').map(s=>+s.trim());
+  const now = new Date(), expOk = mm>=1 && mm<=12 && yy>=0 && new Date(2000+yy, mm) > now;
+  const ok = [
+    mark($('#cc'), !(num.length>=13 && luhn(num))),
+    mark($('#ch'), !$('#ch').value.trim()),
+    mark($('#ex'), !expOk),
+    mark($('#cv'), !/^\d{3,4}$/.test($('#cv').value))
+  ].every(Boolean);
+  if (!ok) return setErr(2, 'Please check your card details.');
+  if (!$('#agree').checked) return setErr(2, 'Please accept the terms to continue.');
+  setErr(2);
+
+  const btn = $('#payBtn'); btn.disabled = true; btn.textContent = 'Processing…';
+  try {
+    await CONFIG.processPayment({
+      firstName: $('#fn').value.trim(), lastName: $('#ln').value.trim(), email: $('#em').value.trim(),
+      plan: 'echo-pro-monthly', amount: 4500, currency: 'USD'
+    });
+    goStep(3);
+  } catch (err) {
+    setErr(2, err.message || 'Payment failed. Please try again.');
+  } finally {
+    btn.disabled = false; btn.textContent = '🔒 Confirm and Pay';
+  }
+});
+</script>
+</body>
+</html>
